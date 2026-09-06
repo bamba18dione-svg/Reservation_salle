@@ -36,7 +36,24 @@ Les reservations doivent respecter les regles de disponibilite, notamment l'abse
 
 ## Installation
 
-Les commandes d'installation et de configuration seront ajoutees au fur et a mesure des etapes du projet.
+```bash
+cp .env.example .env
+composer install
+```
+
+Modifiez ensuite `.env` avec les acces de votre base MySQL. Le fichier `.env` reste local et n'est jamais versionne.
+
+La configuration chargee depuis `.env` est centralisee dans `config/database.php`. Cette couche initialise `Capsule\\Manager`, demarre Eloquent et expose une connexion utilisable par les composants techniques.
+
+La base de donnees et les tables seront ajoutees dans les prochaines etapes.
+
+## Etape 2 : configuration Eloquent
+
+La configuration utilise `vlucas/phpdotenv` pour lire l'environnement et `illuminate/database` pour demarrer Eloquent hors de Laravel.
+
+Cette approche evite que les modeles, repositories et services lisent directement `getenv()` ou connaissent les secrets de connexion. Une configuration centralisee facilite aussi le remplacement de MySQL dans les tests.
+
+Une configuration ecrite directement dans chaque modele serait plus rapide au debut, mais dupliquerait les parametres, melangerait configuration et metier et rendrait les tests plus fragiles.
 
 ## Organisation cible
 
@@ -55,8 +72,8 @@ Le code sera organise selon les responsabilites suivantes :
 | Version | Etape | Etat |
 | --- | --- | --- |
 | v0.0.0 | Initialisation du depot | En cours |
-| v0.1.0 | Initialisation Composer | A venir |
-| v0.2.0 | Configuration Eloquent | A venir |
+| v0.1.0 | Initialisation Composer | Termine |
+| v0.2.0 | Configuration Eloquent | Termine |
 | v0.3.0 | Modeles | A venir |
 | v0.4.0 | Donnees initiales | A venir |
 | v0.5.0 | Validation | A venir |

@@ -2,6 +2,19 @@
 
 Toutes les modifications importantes du projet sont documentees dans ce fichier.
 
+## [v0.2.0] - 2026-09-06
+
+### Ajoute
+
+- Chargement de la configuration avec `phpdotenv`.
+- Configuration centralisee de `Capsule\\Manager`.
+- Demarrage d'Eloquent hors de Laravel.
+- Documentation de la configuration de la base de donnees.
+
+### Securite
+
+- Suppression du mot de passe de `.env.example`.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute
