@@ -68,6 +68,16 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Recherche des conflits entre reservations confirmees.
 - Annulation d'une reservation via le repository.
 
+## [v0.8.0] - 2026-09-07
+
+### Ajoute
+
+- Service de creation des reservations.
+- Service d'annulation des reservations.
+- Verification de la disponibilite et des regles de duree et de futur.
+- Exceptions metier pour les salles indisponibles et reservations introuvables.
+- Tests unitaires avec repositories en memoire.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute

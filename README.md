@@ -239,6 +239,32 @@ Non. Pour une petite application simple, utiliser directement Eloquent peut redu
 
 Elle respecte l'inversion de dependance, limite le couplage a Eloquent et rend les services testables sans MySQL. Elle fournit aussi un emplacement unique pour les filtres, les relations chargees et la regle de recherche de conflit.
 
+## Etape 8 : services metier
+
+`CreerReservationService` porte les regles de reservation : salle existante et active, debut avant fin, duree maximale de quatre heures, debut dans le futur et absence de conflit. `AnnulerReservationService` retrouve une reservation et delegue son annulation au repository.
+
+Les services dependent des interfaces de repositories et recoivent leurs dependances par constructeur. Ils ne connaissent ni `$_POST`, ni FastRoute, ni les vues, ni le conteneur. Les exceptions `SalleIndisponibleException`, `ReservationIntrouvableException` et `ReservationInvalideException` expriment les erreurs metier sans les melanger aux details HTTP.
+
+Les tests utilisent des repositories en memoire et n'ont pas besoin de MySQL. Placer ces regles dans un controleur serait plus direct, mais rendrait le comportement difficile a reutiliser et a tester. Les placer dans un modele Eloquent couplerait davantage le metier a la base de donnees.
+
+### Reponses aux questions de l'etape 8
+
+#### 1. Pourquoi ces regles ne sont-elles pas dans le controleur ?
+
+Le controleur orchestre la requete HTTP, la validation, la construction du DTO et la reponse. Les regles de disponibilite doivent rester reutilisables depuis une commande, une API ou un test, donc elles appartiennent au service metier.
+
+#### 2. Pourquoi le service depend-il d'une interface de Repository ?
+
+Une interface permet au service de demander les donnees sans connaitre Eloquent. Cela respecte l'inversion de dependance et permet d'utiliser un repository en memoire ou un mock dans les tests unitaires.
+
+#### 3. Quelle exception doit etre levee en cas de conflit ?
+
+`SalleIndisponibleException` est levee lorsque la salle n'existe pas, est inactive ou possede deja une reservation confirmee qui chevauche la periode demandee. Une reservation annulee ne provoque pas cette exception.
+
+#### 4. Comment tester le service sans MySQL ?
+
+Il faut fournir des implementations en memoire des interfaces de repositories. Les tests de cette etape utilisent `InMemorySalleRepository` et `InMemoryReservationRepository`, ce qui permet de verifier les regles avec des donnees controlees sans ouvrir de connexion MySQL.
+
 ## Organisation cible
 
 Le code sera organise selon les responsabilites suivantes :
@@ -263,7 +289,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.5.0 | Validation | Termine |
 | v0.6.0 | DTO | Termine |
 | v0.7.0 | Repositories | Termine |
-| v0.8.0 | Services metier | A venir |
+| v0.8.0 | Services metier | Termine |
 | v0.9.0 | Controleurs et vues | A venir |
 | v0.10.0 | Routage | A venir |
 | v0.11.0 | Conteneur PHP-DI | A venir |
