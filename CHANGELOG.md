@@ -40,6 +40,15 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Ajout des cinq salles initiales demandees par le sujet.
 - Protection contre les doublons avec `firstOrCreate` sur le nom et le batiment.
 
+## [v0.5.0] - 2026-09-07
+
+### Ajoute
+
+- Contrat commun `ValidatorInterface`.
+- Objet `ValidationResult` avec erreurs par champ et donnees acceptees.
+- Validation des salles et des reservations avec Respect/Validation.
+- Tests unitaires des donnees invalides et valides.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute

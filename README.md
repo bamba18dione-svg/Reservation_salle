@@ -155,6 +155,38 @@ Un seeder reproductible peut etre execute apres une nouvelle installation, par u
 
 Le script recherche d'abord une salle avec `firstOrCreate` selon son nom et son batiment. Si elle existe, elle est reutilisee ; sinon, elle est creee. Pour renforcer cette garantie au niveau de la base, une contrainte d'unicite sur `nom` et `batiment` pourrait aussi etre ajoutee dans une migration.
 
+## Etape 5 : validation
+
+La validation est organisee autour de `ValidatorInterface`, `ValidationResult`, `SalleValidator` et `ReservationValidator`. Les validateurs utilisent Respect/Validation pour verifier la forme des donnees avant leur utilisation.
+
+Les validateurs retournent toutes les erreurs par champ ainsi que les donnees acceptees. Ils ne sauvegardent rien et ne comparent pas les dates entre elles : ces responsabilites appartiennent respectivement aux repositories et aux services metier.
+
+Les tests unitaires couvrent notamment l'email invalide, le responsable vide, la capacite negative, le type inconnu et la date incorrecte :
+
+```bash
+vendor/bin/phpunit
+```
+
+Mettre les regles directement dans les controleurs serait plus rapide pour un prototype, mais cela dupliquerait la logique et rendrait les tests difficiles. Une validation manuelle avec des `if` serait aussi plus longue a maintenir que des regles composables.
+
+### Reponses aux questions de l'etape 5
+
+#### 1. Pourquoi separer la validation syntaxique des regles metier ?
+
+La validation syntaxique verifie la forme d'une donnee : type, longueur, email ou date lisible. Les regles metier verifient le sens dans le contexte de l'application, comme une salle active, une date future ou l'absence de chevauchement. Cette separation evite de transformer les validateurs en services metier difficiles a reutiliser.
+
+#### 2. Pourquoi creer une interface de validation ?
+
+`ValidatorInterface` impose un contrat commun aux validateurs. Les controleurs et le conteneur peuvent donc dependre de ce contrat plutot que d'une implementation concrete, ce qui respecte l'inversion de dependance et facilite le remplacement ou le test d'un validateur.
+
+#### 3. Pourquoi le validateur ne doit-il pas enregistrer les donnees ?
+
+Le validateur doit avoir une seule responsabilite : verifier les donnees. L'enregistrement appartient au service ou au repository. Melanger ces responsabilites rendrait les effets de bord imprevisibles et empêcherait de valider un formulaire sans modifier la base.
+
+#### 4. Comment retourner plusieurs erreurs en une seule fois ?
+
+`ValidationResult` conserve un tableau d'erreurs indexe par nom de champ. Le validateur teste chaque champ au lieu de s'arreter a la premiere erreur, ce qui permet de reafficher le formulaire avec toutes les corrections necessaires.
+
 ## Organisation cible
 
 Le code sera organise selon les responsabilites suivantes :
@@ -176,7 +208,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.2.0 | Configuration Eloquent | Termine |
 | v0.3.0 | Modeles | Termine |
 | v0.4.0 | Donnees initiales | Termine |
-| v0.5.0 | Validation | A venir |
+| v0.5.0 | Validation | Termine |
 | v0.6.0 | DTO | A venir |
 | v0.7.0 | Repositories | A venir |
 | v0.8.0 | Services metier | A venir |
