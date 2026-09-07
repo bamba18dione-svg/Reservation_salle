@@ -15,6 +15,15 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 
 - Suppression du mot de passe de `.env.example`.
 
+## [v0.3.0] - 2026-09-07
+
+### Ajoute
+
+- Migration idempotente des tables `salles` et `reservations`.
+- Modele `Salle` avec sa relation vers les reservations.
+- Modele `Reservation` avec sa relation vers la salle.
+- Casts Eloquent pour les nombres, booleens et dates immuables.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute

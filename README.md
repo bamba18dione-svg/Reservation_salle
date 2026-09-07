@@ -47,6 +47,12 @@ La configuration chargee depuis `.env` est centralisee dans `config/database.php
 
 La base de donnees et les tables seront ajoutees dans les prochaines etapes.
 
+Pour creer les tables apres avoir configure `.env`, executez :
+
+```bash
+php database/migrations/001_create_salles_and_reservations.php
+```
+
 ## Etape 2 : configuration Eloquent
 
 La configuration utilise `vlucas/phpdotenv` pour lire l'environnement et `illuminate/database` pour demarrer Eloquent hors de Laravel.
@@ -54,6 +60,14 @@ La configuration utilise `vlucas/phpdotenv` pour lire l'environnement et `illumi
 Cette approche evite que les modeles, repositories et services lisent directement `getenv()` ou connaissent les secrets de connexion. Une configuration centralisee facilite aussi le remplacement de MySQL dans les tests.
 
 Une configuration ecrite directement dans chaque modele serait plus rapide au debut, mais dupliquerait les parametres, melangerait configuration et metier et rendrait les tests plus fragiles.
+
+## Etape 3 : modeles et schema
+
+La migration cree les tables `salles` et `reservations` avec une cle etrangere entre elles. Elle verifie l'existence des tables avant leur creation afin de pouvoir etre relancee sans doublons.
+
+Les modeles `Salle` et `Reservation` utilisent `$fillable` pour limiter les attributs assignables, des casts pour obtenir des types PHP coherents et des relations `hasMany` / `belongsTo` pour representer le domaine.
+
+Une requete SQL directement placee dans un controleur serait plus courte, mais elle melangerait HTTP et persistance. De meme, lire `$_POST` dans un modele rendrait le modele difficile a tester et violerait la separation des responsabilites.
 
 ## Organisation cible
 
@@ -74,7 +88,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.0.0 | Initialisation du depot | En cours |
 | v0.1.0 | Initialisation Composer | Termine |
 | v0.2.0 | Configuration Eloquent | Termine |
-| v0.3.0 | Modeles | A venir |
+| v0.3.0 | Modeles | Termine |
 | v0.4.0 | Donnees initiales | A venir |
 | v0.5.0 | Validation | A venir |
 | v0.6.0 | DTO | A venir |
