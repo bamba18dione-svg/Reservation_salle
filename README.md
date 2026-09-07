@@ -129,6 +129,32 @@ La base de donnees peut retourner un booleen sous forme d'entier `0` ou `1`. Le 
 
 Les casts `immutable_datetime` transforment les dates SQL en objets `DateTimeImmutable`. Cela permet de comparer, additionner et soustraire des durees de maniere fiable, tout en evitant la modification accidentelle d'une date existante. Les regles de chevauchement et de duree pourront ainsi utiliser des operations datees robustes dans les services metier.
 
+## Etape 4 : donnees initiales
+
+Le script `database/seed.php` ajoute les cinq salles demandees par le sujet : Amphitheatre A, Salle B12, Laboratoire Chimie, Salle Informatique 1 et Salle de reunion.
+
+Pour executer le seeder :
+
+```bash
+php database/seed.php
+```
+
+Le script utilise `firstOrCreate` avec le couple `nom` et `batiment` comme identifiant fonctionnel. Il peut donc etre execute plusieurs fois sans creer de doublons. Une insertion manuelle sans verification serait plus simple, mais elle ajouterait les memes salles a chaque execution.
+
+### Reponses aux questions de l'etape 4
+
+#### 1. Quelle difference existe entre migration et seeder ?
+
+Une migration definit et fait evoluer la structure de la base de donnees : tables, colonnes, index et cles etrangeres. Un seeder ajoute des donnees initiales ou de demonstration dans une structure deja creee. La migration construit le schema, tandis que le seeder le peuple.
+
+#### 2. Pourquoi les donnees initiales doivent-elles etre reproductibles ?
+
+Un seeder reproductible peut etre execute apres une nouvelle installation, par un autre developpeur ou dans un environnement de test sans produire un resultat different ou incoherent. Cela facilite l'installation et permet de retrouver un etat de depart connu.
+
+#### 3. Comment empecher les doublons ?
+
+Le script recherche d'abord une salle avec `firstOrCreate` selon son nom et son batiment. Si elle existe, elle est reutilisee ; sinon, elle est creee. Pour renforcer cette garantie au niveau de la base, une contrainte d'unicite sur `nom` et `batiment` pourrait aussi etre ajoutee dans une migration.
+
 ## Organisation cible
 
 Le code sera organise selon les responsabilites suivantes :
@@ -149,7 +175,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.1.0 | Initialisation Composer | Termine |
 | v0.2.0 | Configuration Eloquent | Termine |
 | v0.3.0 | Modeles | Termine |
-| v0.4.0 | Donnees initiales | A venir |
+| v0.4.0 | Donnees initiales | Termine |
 | v0.5.0 | Validation | A venir |
 | v0.6.0 | DTO | A venir |
 | v0.7.0 | Repositories | A venir |

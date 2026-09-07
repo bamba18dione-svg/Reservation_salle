@@ -32,6 +32,14 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Modele `Reservation` avec sa relation vers la salle.
 - Casts Eloquent pour les nombres, booleens et dates immuables.
 
+## [v0.4.0] - 2026-09-07
+
+### Ajoute
+
+- Creation du seeder `database/seed.php`.
+- Ajout des cinq salles initiales demandees par le sujet.
+- Protection contre les doublons avec `firstOrCreate` sur le nom et le batiment.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute
