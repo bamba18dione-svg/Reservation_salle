@@ -187,6 +187,32 @@ Le validateur doit avoir une seule responsabilite : verifier les donnees. L'enre
 
 `ValidationResult` conserve un tableau d'erreurs indexe par nom de champ. Le validateur teste chaque champ au lieu de s'arreter a la premiere erreur, ce qui permet de reafficher le formulaire avec toutes les corrections necessaires.
 
+## Etape 6 : objets de transport et Builder
+
+Les classes `CreerSalleDTO` et `CreerReservationDTO` transportent des donnees deja validees et correctement typees. Elles sont immuables et ne connaissent ni Eloquent, ni `$_POST`, ni les services metier.
+
+La construction est faite au niveau du DTO avec `CreerSalleDTOBuilder` et `CreerReservationDTOBuilder`. Le Builder expose une API fluide, convertit les dates en `DateTimeImmutable` et retourne le DTO avec `build()`. Un DTO ne contient pas de `save()` : la persistance reste la responsabilite du repository.
+
+Cette approche evite de transmettre un tableau HTTP brut a la couche metier. Construire directement un modele Eloquent depuis `$_POST` serait plus court, mais melangerait transport HTTP, typage et persistance. Un constructeur avec beaucoup d'arguments serait possible, mais le Builder rend explicite chaque champ et controle les DTO incomplets.
+
+### Reponses aux questions de l'etape 6
+
+#### 1. Quelle difference existe entre DTO et modele Eloquent ?
+
+Un DTO transporte des donnees entre les couches sans acceder a la base. Un modele Eloquent represente une entite persistante, connait une table et peut charger ou enregistrer des donnees. Le DTO protege donc le domaine contre les details HTTP et ORM.
+
+#### 2. Pourquoi le DTO ne doit-il pas appeler `save()` ?
+
+Le DTO a une seule responsabilite : transporter des valeurs typees. Appeler `save()` lui donnerait une responsabilite de persistance, creerait un couplage avec Eloquent et empecherait de reutiliser le DTO dans un test ou une autre infrastructure.
+
+#### 3. A quel moment transforme-t-on les chaines en dates ?
+
+Les chaines issues du formulaire sont validees syntaxiquement par le validateur, puis converties en `DateTimeImmutable` par le `CreerReservationDTOBuilder`. Le service recoit ainsi des dates typees et ne depend plus du format HTTP.
+
+#### 4. Le DTO doit-il contenir la regle de chevauchement ?
+
+Non. Le DTO transporte les dates, mais ne decide pas si elles sont disponibles. La regle de chevauchement depend de la base, de la salle et des reservations existantes ; elle appartient donc au service metier.
+
 ## Organisation cible
 
 Le code sera organise selon les responsabilites suivantes :
@@ -209,7 +235,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.3.0 | Modeles | Termine |
 | v0.4.0 | Donnees initiales | Termine |
 | v0.5.0 | Validation | Termine |
-| v0.6.0 | DTO | A venir |
+| v0.6.0 | DTO | Termine |
 | v0.7.0 | Repositories | A venir |
 | v0.8.0 | Services metier | A venir |
 | v0.9.0 | Controleurs et vues | A venir |

@@ -49,6 +49,15 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Validation des salles et des reservations avec Respect/Validation.
 - Tests unitaires des donnees invalides et valides.
 
+## [v0.6.0] - 2026-09-07
+
+### Ajoute
+
+- DTO immuables `CreerSalleDTO` et `CreerReservationDTO`.
+- Builders dedies pour construire les DTO avec des donnees typees.
+- Conversion des dates en `DateTimeImmutable` au niveau du Builder.
+- Tests unitaires de construction des DTO et de rejet des DTO incomplets.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute
