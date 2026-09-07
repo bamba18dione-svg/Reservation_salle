@@ -58,6 +58,16 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Conversion des dates en `DateTimeImmutable` au niveau du Builder.
 - Tests unitaires de construction des DTO et de rejet des DTO incomplets.
 
+## [v0.7.0] - 2026-09-07
+
+### Ajoute
+
+- Contrats `SalleRepositoryInterface` et `ReservationRepositoryInterface`.
+- Implementations Eloquent pour les salles et les reservations.
+- Filtrage des reservations par salle.
+- Recherche des conflits entre reservations confirmees.
+- Annulation d'une reservation via le repository.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute

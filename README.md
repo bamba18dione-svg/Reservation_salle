@@ -213,6 +213,32 @@ Les chaines issues du formulaire sont validees syntaxiquement par le validateur,
 
 Non. Le DTO transporte les dates, mais ne decide pas si elles sont disponibles. La regle de chevauchement depend de la base, de la salle et des reservations existantes ; elle appartient donc au service metier.
 
+## Etape 7 : repositories
+
+Les contrats `SalleRepositoryInterface` et `ReservationRepositoryInterface` definissent les operations necessaires a l'application. Les classes `EloquentSalleRepository` et `EloquentReservationRepository` les implementent avec Eloquent.
+
+Les controleurs et les services ne doivent donc pas appeler `Salle::query()`, `Reservation::where(...)` ou `save()` directement. La recherche de conflit est centralisee dans `EloquentReservationRepository` et ignore les reservations dont le statut est `annulee`.
+
+Cette abstraction facilite les tests unitaires des services avec des doublures en memoire. Utiliser directement Eloquent dans les services serait plus court, mais couplerait la logique metier a l'ORM et rendrait plus difficile le remplacement de la persistance. Le Repository ajoute toutefois une couche supplementaire a maintenir ; ici, elle est justifiee par la contrainte architecturale et l'inversion de dependance.
+
+### Reponses aux questions de l'etape 7
+
+#### 1. Eloquent constitue-t-il deja un acces aux donnees ?
+
+Oui. Eloquent fournit deja un ORM, un Query Builder et un Active Record capables de lire et d'enregistrer les donnees. Il constitue donc techniquement un acces aux donnees complet.
+
+#### 2. Pourquoi ajouter un Repository au-dessus d'Eloquent ?
+
+Le Repository isole l'ORM derriere un contrat metier. Les services dependent d'une interface stable et ne connaissent pas les details de construction des requetes Eloquent. Cela facilite les tests, le remplacement de l'ORM et la centralisation des requetes complexes comme la recherche de chevauchement.
+
+#### 3. Cette abstraction est-elle toujours necessaire ?
+
+Non. Pour une petite application simple, utiliser directement Eloquent peut reduire le nombre de classes et accelerer le developpement. Elle devient pertinente lorsque le projet impose une separation stricte, plusieurs sources de donnees, des tests sans base ou une logique de requetes importante.
+
+#### 4. Quel avantage apporte-t-elle ?
+
+Elle respecte l'inversion de dependance, limite le couplage a Eloquent et rend les services testables sans MySQL. Elle fournit aussi un emplacement unique pour les filtres, les relations chargees et la regle de recherche de conflit.
+
 ## Organisation cible
 
 Le code sera organise selon les responsabilites suivantes :
@@ -236,7 +262,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.4.0 | Donnees initiales | Termine |
 | v0.5.0 | Validation | Termine |
 | v0.6.0 | DTO | Termine |
-| v0.7.0 | Repositories | A venir |
+| v0.7.0 | Repositories | Termine |
 | v0.8.0 | Services metier | A venir |
 | v0.9.0 | Controleurs et vues | A venir |
 | v0.10.0 | Routage | A venir |
