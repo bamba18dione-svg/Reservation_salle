@@ -24,6 +24,24 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Modele `Reservation` avec sa relation vers la salle.
 - Casts Eloquent pour les nombres, booleens et dates immuables.
 
+### Reponses aux questions
+
+#### 1. Quel type de relation Eloquent avez-vous utilise ?
+
+Nous avons utilise une relation `HasMany` entre `Salle` et `Reservation`, car une salle peut posseder plusieurs reservations. Le modele `Reservation` utilise la relation inverse `BelongsTo`, car chaque reservation appartient a une seule salle.
+
+#### 2. Pourquoi declarer `$fillable` ou `$guarded` ?
+
+`$fillable` protege les modeles contre l'assignation de masse non controlee. Nous declarons explicitement les attributs autorises a etre remplis, afin qu'un champ inattendu provenant d'une requete HTTP ne puisse pas modifier une colonne sensible. `$guarded` est une alternative qui declare les attributs interdits, mais `$fillable` est plus explicite et plus sur dans ce projet.
+
+#### 3. Pourquoi convertir `active` en booleen ?
+
+La base de donnees peut retourner un booleen sous forme d'entier `0` ou `1`. Le cast Eloquent garantit que `active` est manipule comme un vrai `bool` en PHP, ce qui rend les conditions metier plus claires et evite les comparaisons incoherentes.
+
+#### 4. Pourquoi convertir les dates en objets ?
+
+Les casts `immutable_datetime` transforment les dates SQL en objets `DateTimeImmutable`. Cela permet de comparer, additionner et soustraire des durees de maniere fiable, tout en evitant la modification accidentelle d'une date existante. Les regles de chevauchement et de duree pourront ainsi utiliser des operations datees robustes dans les services metier.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute
@@ -89,3 +107,5 @@ Isolation : Placer le démarrage dans config/database.php évite de dupliquer la
 SQL écrit à la main = tu demandes directement à la base de données quoi faire.
 
 ORM = tu manipules des objets PHP, et l'ORM traduit tes actions en SQL.
+
+##
