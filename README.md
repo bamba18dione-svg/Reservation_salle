@@ -317,6 +317,36 @@ La contrainte `\\d+` limite le parametre aux chiffres. Une URL comme `/salles/ab
 
 Le dispatcher retourne le handler, puis le routeur demande au conteneur de construire le controleur et appelle l'action avec les parametres dynamiques. Le routeur joue donc le role d'adaptateur entre FastRoute, le conteneur et les controleurs.
 
+## Etape 11 : conteneur PHP-DI
+
+`config/container.php` configure PHP-DI avec l'autowiring pour les classes concretes et des definitions explicites pour les interfaces de repositories. Des factories sont utilisees pour `Capsule\\Manager`, `ViewRenderer` et `Router`, car ces objets ont besoin d'une configuration externe.
+
+`public/index.php` est le seul endroit qui construit le conteneur et demande `Application`. Les autres classes recoivent leurs dependances par constructeur et ne connaissent pas `ContainerInterface` pour rechercher leurs propres objets.
+
+Le conteneur initialise Eloquent en injectant `Capsule\\Manager` dans `Application`, puis le Front Controller lance le routeur avec la methode, l'URI et les donnees POST. Cette approche evite le Service Locator et respecte l'inversion de controle.
+
+### Reponses aux questions de l'etape 11
+
+#### 1. Quelle difference existe entre injection et conteneur ?
+
+L'injection consiste a fournir directement une dependance a une classe, generalement par son constructeur. Le conteneur est l'outil qui construit les objets et assemble automatiquement ces dependances. Une classe doit recevoir ses dependances, pas interroger elle-meme le conteneur.
+
+#### 2. Qu'est-ce que l'autowiring ?
+
+L'autowiring permet a PHP-DI d'inspecter le constructeur d'une classe concrete et de resoudre automatiquement ses parametres. Il evite les definitions repetitives, mais les interfaces et les valeurs scalaires necessitent des definitions explicites.
+
+#### 3. Pourquoi les interfaces necessitent-elles une definition ?
+
+Une interface ne peut pas etre instanciee directement. PHP-DI doit donc savoir quelle implementation utiliser, par exemple `SalleRepositoryInterface` vers `EloquentSalleRepository`.
+
+#### 4. Pourquoi limiter `$container->get()` au point d'entree ?
+
+Limiter l'acces direct au conteneur a `public/index.php` garde les dependances visibles dans les constructeurs. Cela evite le Service Locator, facilite les tests et respecte le principe d'inversion de dependance.
+
+#### 5. Quel anti-pattern apparait si toutes les classes interrogent le conteneur ?
+
+Il s'agit du Service Locator. Les classes deviennent dependantes d'un objet global, leurs dependances sont cachees et leurs tests necessitent un conteneur complet. Cela augmente le couplage et rend l'architecture plus difficile a comprendre.
+
 ## Organisation cible
 
 Le code sera organise selon les responsabilites suivantes :
@@ -344,7 +374,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.8.0 | Services metier | Termine |
 | v0.9.0 | Controleurs et vues | Termine |
 | v0.10.0 | Routage | Termine |
-| v0.11.0 | Conteneur PHP-DI | A venir |
+| v0.11.0 | Conteneur PHP-DI | Termine |
 | v0.12.0 | Tests | A venir |
 | v1.0.0 | Version finale | A venir |
 

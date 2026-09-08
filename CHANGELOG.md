@@ -100,6 +100,16 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Transmission des parametres dynamiques aux controleurs.
 - Tests unitaires du routage.
 
+## [v0.11.0] - 2026-09-08
+
+### Ajoute
+
+- Configuration PHP-DI avec autowiring et definitions d'interfaces.
+- Factories pour Eloquent, le routeur et le rendu des vues.
+- Classe `Application` comme Front Controller applicatif.
+- Initialisation du conteneur dans `public/index.php`.
+- Resolution des dependances par injection de constructeur.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute
