@@ -1,0 +1,107 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\DTO\CreerSalleDTOBuilder;
+use App\Model\Salle;
+use App\Repository\SalleRepositoryInterface;
+use App\Validation\SalleValidator;
+use App\View\ViewRenderer;
+
+final class SalleController
+{
+    public function __construct(
+        private readonly SalleRepositoryInterface $salles,
+        private readonly SalleValidator $validator,
+        private readonly ViewRenderer $views,
+    ) {
+    }
+
+    public function index(): string
+    {
+        return $this->views->render('salle/index', ['salles' => $this->salles->all()]);
+    }
+
+    public function show(int $id): string
+    {
+        $salle = $this->salles->findById($id);
+
+        return $salle === null
+            ? $this->views->render('error/404')
+            : $this->views->render('salle/show', ['salle' => $salle]);
+    }
+
+    public function create(): string
+    {
+        return $this->views->render('salle/form', ['salle' => null, 'errors' => [], 'old' => []]);
+    }
+
+    public function store(array $input): string
+    {
+        $input['active'] = (bool) ($input['active'] ?? false);
+        if (isset($input['capacite'])) {
+            $input['capacite'] = (int) $input['capacite'];
+        }
+
+        $result = $this->validator->validate($input);
+
+        if (!$result->isValid()) {
+            return $this->views->render('salle/form', ['salle' => null, 'errors' => $result->errors(), 'old' => $input]);
+        }
+
+        $data = $result->acceptedData();
+        $dto = (new CreerSalleDTOBuilder())
+            ->nom($data['nom'])
+            ->batiment($data['batiment'])
+            ->capacite($data['capacite'])
+            ->type($data['type'])
+            ->active($data['active'])
+            ->build();
+
+        $this->salles->save(new Salle((array) $dto));
+
+        return $this->redirect('/salles');
+    }
+
+    public function edit(int $id): string
+    {
+        $salle = $this->salles->findById($id);
+
+        return $salle === null
+            ? $this->views->render('error/404')
+            : $this->views->render('salle/form', ['salle' => $salle, 'errors' => [], 'old' => []]);
+    }
+
+    public function update(int $id, array $input): string
+    {
+        $salle = $this->salles->findById($id);
+
+        if ($salle === null) {
+            return $this->views->render('error/404');
+        }
+
+        $input['active'] = (bool) ($input['active'] ?? false);
+        if (isset($input['capacite'])) {
+            $input['capacite'] = (int) $input['capacite'];
+        }
+
+        $result = $this->validator->validate($input);
+
+        if (!$result->isValid()) {
+            return $this->views->render('salle/form', ['salle' => $salle, 'errors' => $result->errors(), 'old' => $input]);
+        }
+
+        $salle->fill($result->acceptedData());
+        $this->salles->save($salle);
+
+        return $this->redirect('/salles/' . $id);
+    }
+
+    private function redirect(string $location): string
+    {
+        header('Location: ' . $location, true, 303);
+        return '';
+    }
+}

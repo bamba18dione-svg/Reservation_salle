@@ -265,6 +265,32 @@ Une interface permet au service de demander les donnees sans connaitre Eloquent.
 
 Il faut fournir des implementations en memoire des interfaces de repositories. Les tests de cette etape utilisent `InMemorySalleRepository` et `InMemoryReservationRepository`, ce qui permet de verifier les regles avec des donnees controlees sans ouvrir de connexion MySQL.
 
+## Etape 9 : controleurs et vues
+
+`SalleController` et `ReservationController` orchestrent les requetes web : ils recoivent les donnees, appellent les validateurs, construisent les DTO avec leurs Builders, deleguent au service ou au repository, puis retournent une vue ou une redirection.
+
+Le rendu est centralise dans `ViewRenderer`. Les templates echappent les sorties dynamiques avec `htmlspecialchars` et affichent les erreurs pres des champs concernes. Apres une operation POST reussie, les controleurs retournent une redirection HTTP 303.
+
+Les controleurs ne contiennent aucune requete Eloquent directe et les vues ne connaissent ni le conteneur ni la base de donnees. Mettre le HTML directement dans les controleurs serait plus rapide, mais rendrait l'interface difficile a maintenir. Mettre les regles metier dans les vues produirait aussi des comportements differents selon la page.
+
+### Reponses aux questions de l'etape 9
+
+#### 1. Pourquoi separer les controleurs et les vues ?
+
+Le controleur orchestre le traitement d'une requete, tandis que la vue presente les donnees. Cette separation permet de modifier l'affichage sans modifier les regles de traitement et facilite les tests de chaque couche.
+
+#### 2. Pourquoi echapper les sorties dynamiques ?
+
+`htmlspecialchars` transforme les caracteres speciaux avant leur insertion dans HTML. Cela evite qu'une valeur provenant d'un formulaire ou de la base soit interpretee comme du code HTML ou JavaScript.
+
+#### 3. Pourquoi rediriger apres un POST reussi ?
+
+La redirection applique le pattern Post/Redirect/Get. Elle evite qu'un rafraichissement du navigateur reenvoie le formulaire et cree une nouvelle insertion.
+
+#### 4. Pourquoi afficher les erreurs pres des champs ?
+
+Une erreur associee au nom du champ permet a l'utilisateur de comprendre immediatement quelle valeur corriger. Le tableau d'erreurs conserve aussi les autres erreurs afin de les afficher en une seule fois.
+
 ## Organisation cible
 
 Le code sera organise selon les responsabilites suivantes :
@@ -290,7 +316,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.6.0 | DTO | Termine |
 | v0.7.0 | Repositories | Termine |
 | v0.8.0 | Services metier | Termine |
-| v0.9.0 | Controleurs et vues | A venir |
+| v0.9.0 | Controleurs et vues | Termine |
 | v0.10.0 | Routage | A venir |
 | v0.11.0 | Conteneur PHP-DI | A venir |
 | v0.12.0 | Tests | A venir |

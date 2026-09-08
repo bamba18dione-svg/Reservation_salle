@@ -78,6 +78,17 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Exceptions metier pour les salles indisponibles et reservations introuvables.
 - Tests unitaires avec repositories en memoire.
 
+## [v0.9.0] - 2026-09-08
+
+### Ajoute
+
+- Controleurs `SalleController` et `ReservationController`.
+- Rendu centralise avec `ViewRenderer`.
+- Templates pour les salles, reservations et erreurs 404.
+- Validation des formulaires avant construction des DTO.
+- Redirection apres les operations POST reussies.
+- Echappement des sorties dynamiques dans les vues.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute
