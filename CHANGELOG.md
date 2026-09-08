@@ -89,6 +89,17 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Redirection apres les operations POST reussies.
 - Echappement des sorties dynamiques dans les vues.
 
+## [v0.10.0] - 2026-09-08
+
+### Ajoute
+
+- Declaration des routes dans `routes/web.php`.
+- Dispatcher FastRoute dans `App\\Http\\Router`.
+- Gestion des reponses 404 et 405.
+- En-tete `Allow` pour les methodes non autorisees.
+- Transmission des parametres dynamiques aux controleurs.
+- Tests unitaires du routage.
+
 ## [v0.0.0] - 2026-09-06
 
 ### Ajoute

@@ -291,6 +291,32 @@ La redirection applique le pattern Post/Redirect/Get. Elle evite qu'un rafraichi
 
 Une erreur associee au nom du champ permet a l'utilisateur de comprendre immediatement quelle valeur corriger. Le tableau d'erreurs conserve aussi les autres erreurs afin de les afficher en une seule fois.
 
+## Etape 10 : routage FastRoute
+
+Les routes sont declarees dans `routes/web.php` sous forme de handlers `[ClasseController::class, 'action']`. `App\Http\Router` construit le dispatcher FastRoute, retire la query string avant le dispatch et demande au conteneur de resoudre le controleur uniquement lorsqu'une route correspond.
+
+Le routeur gere les trois situations attendues : 404 pour un chemin inconnu, 405 pour une methode non autorisee avec l'en-tete `Allow`, et 200/303 selon la reponse du controleur. Les identifiants sont contraints par `\\d+` afin de ne transmettre que des nombres aux actions concernees.
+
+Construire les controleurs directement dans `routes/web.php` serait plus simple, mais contournerait l'injection de dependances. Comparer les URL avec des `if` manuels fonctionnerait pour quelques routes, mais deviendrait fragile et ne gererait pas proprement les methodes interdites.
+
+### Reponses aux questions de l'etape 10
+
+#### 1. Pourquoi FastRoute ne construit-il pas lui-meme le controleur ?
+
+FastRoute a pour responsabilite d'associer une methode et un chemin a un handler. La construction du controleur appartient au conteneur d'injection, qui connait les dependances de la classe. Cette separation respecte la responsabilite unique.
+
+#### 2. Quelle difference existe entre 404 et 405 ?
+
+Une reponse 404 signifie qu'aucune route ne correspond au chemin demande. Une reponse 405 signifie que le chemin existe, mais que la methode HTTP utilisee n'est pas autorisee. Dans ce dernier cas, l'en-tete `Allow` indique les methodes acceptes.
+
+#### 3. Pourquoi contraindre `{id}` avec `\\d+` ?
+
+La contrainte `\\d+` limite le parametre aux chiffres. Une URL comme `/salles/abc` est donc rejetee par le routeur au lieu d'arriver dans une action qui attend un identifiant entier.
+
+#### 4. Quel composant doit interpreter le handler retourne ?
+
+Le dispatcher retourne le handler, puis le routeur demande au conteneur de construire le controleur et appelle l'action avec les parametres dynamiques. Le routeur joue donc le role d'adaptateur entre FastRoute, le conteneur et les controleurs.
+
 ## Organisation cible
 
 Le code sera organise selon les responsabilites suivantes :
@@ -317,7 +343,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.7.0 | Repositories | Termine |
 | v0.8.0 | Services metier | Termine |
 | v0.9.0 | Controleurs et vues | Termine |
-| v0.10.0 | Routage | A venir |
+| v0.10.0 | Routage | Termine |
 | v0.11.0 | Conteneur PHP-DI | A venir |
 | v0.12.0 | Tests | A venir |
 | v1.0.0 | Version finale | A venir |
