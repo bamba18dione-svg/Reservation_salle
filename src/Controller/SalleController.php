@@ -30,7 +30,7 @@ final class SalleController
         $salle = $this->salles->findById($id);
 
         return $salle === null
-            ? $this->views->render('error/404')
+            ? $this->notFound()
             : $this->views->render('salle/show', ['salle' => $salle]);
     }
 
@@ -72,7 +72,7 @@ final class SalleController
         $salle = $this->salles->findById($id);
 
         return $salle === null
-            ? $this->views->render('error/404')
+            ? $this->notFound()
             : $this->views->render('salle/form', ['salle' => $salle, 'errors' => [], 'old' => []]);
     }
 
@@ -81,7 +81,7 @@ final class SalleController
         $salle = $this->salles->findById($id);
 
         if ($salle === null) {
-            return $this->views->render('error/404');
+            return $this->notFound();
         }
 
         $input['active'] = (bool) ($input['active'] ?? false);
@@ -100,6 +100,13 @@ final class SalleController
         (new Flash())->success('Salle mise à jour avec succès.');
 
         return $this->redirect('/salles/' . $id);
+    }
+
+    private function notFound(): string
+    {
+        http_response_code(404);
+
+        return $this->views->render('error/404');
     }
 
     private function redirect(string $location): string

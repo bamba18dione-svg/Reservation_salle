@@ -41,7 +41,7 @@ final class ReservationController
         $reservation = $this->reservations->findById($id);
 
         return $reservation === null
-            ? $this->views->render('error/404')
+            ? $this->notFound()
             : $this->views->render('reservation/show', ['reservation' => $reservation]);
     }
 
@@ -98,6 +98,13 @@ final class ReservationController
         (new Flash())->success('Réservation annulée avec succès.');
 
         return $this->redirect('/reservations');
+    }
+
+    private function notFound(): string
+    {
+        http_response_code(404);
+
+        return $this->views->render('error/404');
     }
 
     private function redirect(string $location): string
