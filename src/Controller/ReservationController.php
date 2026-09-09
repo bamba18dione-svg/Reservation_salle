@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\DTO\CreerReservationDTOBuilder;
+use App\Exception\ReservationInvalideException;
 use App\Exception\SalleIndisponibleException;
 use App\Repository\ReservationRepositoryInterface;
 use App\Repository\SalleRepositoryInterface;
@@ -27,7 +28,11 @@ final class ReservationController
 
     public function index(?int $salleId = null): string
     {
-        return $this->views->render('reservation/index', ['reservations' => $this->reservations->all($salleId), 'salles' => $this->salles->all(), 'salleId' => $salleId]);
+        return $this->views->render('reservation/index', [
+            'reservations' => $this->reservations->all($salleId),
+            'salles' => $this->salles->all(),
+            'salleId' => $salleId,
+        ]);
     }
 
     public function show(int $id): string
@@ -68,8 +73,10 @@ final class ReservationController
 
         try {
             $reservation = $this->creator->execute($dto);
-        } catch (SalleIndisponibleException $exception) {
-            return $this->views->render('reservation/form', ['salles' => $this->salles->all(), 'errors' => ['salle_id' => [$exception->getMessage()]], 'old' => $input]);
+        } catch (SalleIndisponibleException|ReservationInvalideException $exception) {
+            $field = $exception instanceof ReservationInvalideException ? 'date_debut' : 'salle_id';
+
+            return $this->views->render('reservation/form', ['salles' => $this->salles->all(), 'errors' => [$field => [$exception->getMessage()]], 'old' => $input]);
         }
 
         return $this->redirect('/reservations/' . $reservation->id);

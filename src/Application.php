@@ -22,6 +22,10 @@ final class Application
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
         $input = $method === 'POST' ? $_POST : [];
 
+        if ($method === 'GET' && isset($_GET['salle']) && ctype_digit((string) $_GET['salle'])) {
+            $input['salle'] = (int) $_GET['salle'];
+        }
+
         echo $this->router->dispatch($method, $uri, $input);
     }
 }

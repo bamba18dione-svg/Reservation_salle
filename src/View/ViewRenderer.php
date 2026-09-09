@@ -15,15 +15,36 @@ final class ViewRenderer
     public function render(string $template, array $data = []): string
     {
         $path = $this->templatesPath . '/' . $template . '.php';
+        $layoutPath = $this->templatesPath . '/layout/base.php';
 
         if (!is_file($path)) {
             throw new RuntimeException("Vue introuvable : {$template}");
         }
 
-        extract($data, EXTR_SKIP);
-        ob_start();
-        require $path;
+        if (!is_file($layoutPath)) {
+            throw new RuntimeException('Layout introuvable : layout/base');
+        }
 
-        return (string) ob_get_clean();
+        ob_start();
+
+        try {
+            extract($data, EXTR_SKIP);
+            require $path;
+            $content = (string) ob_get_clean();
+        } catch (\Throwable $exception) {
+            ob_end_clean();
+            throw $exception;
+        }
+
+        ob_start();
+
+        try {
+            require $layoutPath;
+
+            return (string) ob_get_clean();
+        } catch (\Throwable $exception) {
+            ob_end_clean();
+            throw $exception;
+        }
     }
 }

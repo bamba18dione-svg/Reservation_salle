@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controller\DashboardController;
 use App\Controller\ReservationController;
 use App\Controller\SalleController;
 use App\Http\Router;
@@ -28,10 +29,15 @@ return [
 		return new ViewRenderer(dirname(__DIR__) . '/templates');
 	}),
 	Router::class => factory(static function (\Psr\Container\ContainerInterface $container): Router {
-		return new Router($container, dirname(__DIR__) . '/routes/web.php');
+	  return new Router(
+	    $container,
+	    $container->get(ViewRenderer::class),
+	    dirname(__DIR__) . '/routes/web.php'
+	  );
 	}),
 	SalleController::class => autowire(),
 	ReservationController::class => autowire(),
+	DashboardController::class => autowire(),
 	CreerReservationService::class => autowire(),
 	AnnulerReservationService::class => autowire(),
 	SalleValidator::class => autowire(),

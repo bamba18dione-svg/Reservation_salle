@@ -7,14 +7,15 @@ namespace App\Http;
 use Psr\Container\ContainerInterface;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use App\View\ViewRenderer;
 use function FastRoute\simpleDispatcher;
-
 final class Router
 {
     private Dispatcher $dispatcher;
 
     public function __construct(
         private readonly ContainerInterface $container,
+        private readonly ViewRenderer $view,
         string $routesFile,
     ) {
         $this->dispatcher = simpleDispatcher(static function (RouteCollector $routes) use ($routesFile): void {
@@ -29,7 +30,7 @@ final class Router
         $route = $this->dispatcher->dispatch($method, $path);
 
         return match ($route[0]) {
-            Dispatcher::NOT_FOUND => $this->respond('404 - Page introuvable', 404),
+            Dispatcher::NOT_FOUND => $this->respond($this->view->render('error/404'), 404),
             Dispatcher::METHOD_NOT_ALLOWED => $this->methodNotAllowed($route[1]),
             Dispatcher::FOUND => $this->invoke($route[1], $route[2], $input, $method),
             default => $this->respond('500 - Erreur de routage', 500),
@@ -42,7 +43,11 @@ final class Router
         $controller = $this->container->get($class);
         $arguments = array_map(static fn (string $value): int|string => ctype_digit($value) ? (int) $value : $value, $parameters);
 
-        if ($method === 'POST') {
+        if ($action === 'index' && $class === \App\Controller\ReservationController::class && isset($input['salle'])) {
+            $arguments[] = (int) $input['salle'];
+        }
+
+        if ($method === 'POST' && in_array($action, ['store', 'update'], true)) {
             $arguments[] = $input;
         }
 
@@ -52,8 +57,7 @@ final class Router
     private function methodNotAllowed(array $allowedMethods): string
     {
         header('Allow: ' . implode(', ', $allowedMethods));
-
-        return $this->respond('405 - Methode non autorisee', 405);
+        return $this->respond($this->view->render('error/405'), 405);
     }
 
     private function respond(string $body, int $status): string
