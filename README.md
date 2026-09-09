@@ -375,7 +375,7 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.9.0 | Controleurs et vues | Termine |
 | v0.10.0 | Routage | Termine |
 | v0.11.0 | Conteneur PHP-DI | Termine |
-| v0.12.0 | Tests, dashboard, Docker | Termine |
+| v0.12.0 | Tests, Docker | Termine |
 | v1.0.0 | Version finale | Termine |
 
 ## Documentation

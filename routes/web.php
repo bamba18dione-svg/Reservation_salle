@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Controller\DashboardController;
 use App\Controller\ReservationController;
 use App\Controller\SalleController;
 use FastRoute\RouteCollector;
 
 return static function (RouteCollector $routes): void {
-$routes->addRoute('GET', '/', [DashboardController::class, 'index']);
+$routes->addRoute('GET', '/', [SalleController::class, 'index']);
 	$routes->addRoute('GET', '/salles', [SalleController::class, 'index']);
 	$routes->addRoute('GET', '/salles/create', [SalleController::class, 'create']);
 	$routes->addRoute('POST', '/salles', [SalleController::class, 'store']);

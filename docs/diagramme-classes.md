@@ -7,7 +7,6 @@
 skinparam classAttributeIconSize 0
 
 package "Controller" {
-  class DashboardController { +index() : string }
   class SalleController {
     +index() : string
     +show(int id) : string
@@ -146,7 +145,6 @@ Reservation "*" --> "1" Salle : appartient
 
 Router ..> SalleController : dispatche
 Router ..> ReservationController : dispatche
-Router ..> DashboardController : dispatche
 Application --> Router
 @enduml
 ```

@@ -2,9 +2,8 @@
 $pageTitle = $pageTitle ?? 'Réservations universitaires';
 $activeNav = $activeNav ?? '';
 $navigation = [
-    'dashboard' => ['label' => 'Tableau de bord', 'href' => '/'],
-    'reservations' => ['label' => 'Réservations', 'href' => '/reservations'],
     'salles' => ['label' => 'Salles', 'href' => '/salles'],
+    'reservations' => ['label' => 'Réservations', 'href' => '/reservations'],
 ];
 ?>
 <!doctype html>

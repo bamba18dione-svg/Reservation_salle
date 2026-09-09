@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Controller\DashboardController;
 use App\Controller\ReservationController;
 use App\Controller\SalleController;
 use App\Http\Router;
@@ -37,7 +36,6 @@ return [
 	}),
 	SalleController::class => autowire(),
 	ReservationController::class => autowire(),
-	DashboardController::class => autowire(),
 	CreerReservationService::class => autowire(),
 	AnnulerReservationService::class => autowire(),
 	SalleValidator::class => autowire(),
