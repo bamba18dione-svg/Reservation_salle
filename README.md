@@ -375,9 +375,37 @@ Le code sera organise selon les responsabilites suivantes :
 | v0.9.0 | Controleurs et vues | Termine |
 | v0.10.0 | Routage | Termine |
 | v0.11.0 | Conteneur PHP-DI | Termine |
-| v0.12.0 | Tests | A venir |
-| v1.0.0 | Version finale | A venir |
+| v0.12.0 | Tests, dashboard, Docker | Termine |
+| v1.0.0 | Version finale | Termine |
 
 ## Documentation
-
 Les choix architecturaux, les avantages et les limites des approches retenues seront documentes dans `ARCHITECTURE.md` lors de la finalisation du projet.
+
+## Etape 13 : finalisation
+
+### Messages flash
+Les operations reussies (creation de salle, mise a jour, creation de reservation, annulation) affichent un message de succes apres la redirection. Les echecs (reservation introuvable, erreur interne) affichent un message d'erreur. Les messages sont stockes en session par `App\Support\Flash` et affiches une seule fois dans le layout.
+
+### Gestion des exceptions
+- Les exceptions metier (`SalleIndisponibleException`, `ReservationInvalideException`, `ReservationIntrouvableException`) sont interceptees dans les controleurs et transformees en erreurs de formulaire ou messages flash.
+- Toute exception non interceptee est capturee par `Application::runSafe()` : le detail technique est journalise via `error_log`, l'utilisateur recoit une page 500 dediee avec un message generique.
+
+### Diagramme de classes
+Le diagramme de classes complet est disponible dans `docs/diagramme-classes.md` (format PlantUML + Mermaid).
+
+### Lancer l'application
+En local :
+```bash
+php -S localhost:8000 -t public
+```
+Avec Docker :
+```bash
+docker compose up -d
+```
+L'application est accessible sur http://localhost:8000.
+
+### Tests
+```bash
+./vendor/bin/phpunit
+```
+Les tests unitaires couvrent la validation et les services ; les tests d'integration utilisent SQLite en memoire pour tester les modeles Eloquent et les repositories sans MySQL.

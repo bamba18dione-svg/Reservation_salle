@@ -8,6 +8,7 @@ use App\DTO\CreerSalleDTOBuilder;
 use App\Model\Salle;
 use App\Repository\SalleRepositoryInterface;
 use App\Validation\SalleValidator;
+use App\Support\Flash;
 use App\View\ViewRenderer;
 
 final class SalleController
@@ -61,6 +62,7 @@ final class SalleController
             ->build();
 
         $this->salles->save(new Salle((array) $dto));
+        (new Flash())->success('Salle créée avec succès.');
 
         return $this->redirect('/salles');
     }
@@ -95,6 +97,7 @@ final class SalleController
 
         $salle->fill($result->acceptedData());
         $this->salles->save($salle);
+        (new Flash())->success('Salle mise à jour avec succès.');
 
         return $this->redirect('/salles/' . $id);
     }

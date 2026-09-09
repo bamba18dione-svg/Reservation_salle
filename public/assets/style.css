@@ -1122,3 +1122,32 @@ textarea.form-control {
         transition-duration: 0.01ms !important;
     }
 }
+
+
+/* ===== Messages flash (succès / erreur) ===== */
+.flash {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 8px);
+    margin-bottom: var(--space-5, 24px);
+    padding: var(--space-4, 16px) var(--space-5, 24px);
+    border-radius: 12px;
+    border-left: 5px solid;
+    font-weight: 500;
+}
+
+.flash--success {
+    background: #e6f6ec;
+    border-color: #1e7e46;
+    color: #155c34;
+}
+
+.flash--error {
+    background: #fdeaea;
+    border-color: #c0392b;
+    color: #8c251b;
+}
+
+.flash__item {
+    margin: 0;
+}

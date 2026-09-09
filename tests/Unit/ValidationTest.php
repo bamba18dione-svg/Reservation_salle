@@ -22,38 +22,40 @@ class ValidationTest extends TestCase
     public function testAdresseElectroniqueInvalide(): void
     {
         $donnees = [
-            'client_email' => 'email-invalide-sans-at',
+            'email' => 'email-invalide-sans-at',
             'date_debut' => '2026-10-10 10:00:00',
             'date_fin' => '2026-10-10 12:00:00',
         ];
 
-        $erreurs = $this->reservationValidator->validate($donnees);
-        $this->assertArrayHasKey('client_email', $erreurs);
+        $erreurs = $this->reservationValidator->validate($donnees)->errors();
+        $this->assertArrayHasKey('email', $erreurs);
     }
 
-    public function testResponsableVide(): void
+    public function testNomVide(): void
     {
         $donnees = [
-            'nom' => 'Salle B',
+            'nom' => '', // Vide
+            'batiment' => 'Bloc A',
             'capacite' => 10,
             'type' => 'reunion',
-            'responsable' => '', // Vide
+            'active' => true,
         ];
 
-        $erreurs = $this->salleValidator->validate($donnees);
-        $this->assertArrayHasKey('responsable', $erreurs);
+        $erreurs = $this->salleValidator->validate($donnees)->errors();
+        $this->assertArrayHasKey('nom', $erreurs);
     }
 
     public function testCapaciteNegative(): void
     {
         $donnees = [
             'nom' => 'Salle C',
+            'batiment' => 'Bloc A',
             'capacite' => -5,
             'type' => 'reunion',
-            'responsable' => 'Jean Dupont',
+            'active' => true,
         ];
 
-        $erreurs = $this->salleValidator->validate($donnees);
+        $erreurs = $this->salleValidator->validate($donnees)->errors();
         $this->assertArrayHasKey('capacite', $erreurs);
     }
 
@@ -61,24 +63,25 @@ class ValidationTest extends TestCase
     {
         $donnees = [
             'nom' => 'Salle D',
+            'batiment' => 'Bloc A',
             'capacite' => 20,
             'type' => 'type_inexistant',
-            'responsable' => 'Jean Dupont',
+            'active' => true,
         ];
 
-        $erreurs = $this->salleValidator->validate($donnees);
+        $erreurs = $this->salleValidator->validate($donnees)->errors();
         $this->assertArrayHasKey('type', $erreurs);
     }
 
     public function testDateIncorrecte(): void
     {
         $donnees = [
-            'client_email' => 'test@example.com',
+            'email' => 'test@example.com',
             'date_debut' => '2026-13-45 25:99:00', // Format / Valeur invalide
             'date_fin' => '2026-10-10 12:00:00',
         ];
 
-        $erreurs = $this->reservationValidator->validate($donnees);
+        $erreurs = $this->reservationValidator->validate($donnees)->errors();
         $this->assertArrayHasKey('date_debut', $erreurs);
     }
 }

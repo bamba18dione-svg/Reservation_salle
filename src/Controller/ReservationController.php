@@ -11,6 +11,7 @@ use App\Repository\ReservationRepositoryInterface;
 use App\Repository\SalleRepositoryInterface;
 use App\Service\AnnulerReservationService;
 use App\Service\CreerReservationService;
+use App\Support\Flash;
 use App\Validation\ReservationValidator;
 use App\View\ViewRenderer;
 
@@ -79,6 +80,8 @@ final class ReservationController
             return $this->views->render('reservation/form', ['salles' => $this->salles->all(), 'errors' => [$field => [$exception->getMessage()]], 'old' => $input]);
         }
 
+        (new Flash())->success('Réservation créée avec succès.');
+
         return $this->redirect('/reservations/' . $reservation->id);
     }
 
@@ -87,8 +90,12 @@ final class ReservationController
         try {
             $this->canceller->execute($id);
         } catch (\DomainException) {
-            return $this->views->render('error/404');
+            (new Flash())->error('Impossible d\'annuler cette réservation : elle est introuvable ou déjà annulée.');
+
+            return $this->redirect('/reservations');
         }
+
+        (new Flash())->success('Réservation annulée avec succès.');
 
         return $this->redirect('/reservations');
     }

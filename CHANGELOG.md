@@ -119,3 +119,27 @@ Toutes les modifications importantes du projet sont documentees dans ce fichier.
 - Creation de la documentation initiale du projet.
 - Ajout des regles d'exclusion Git.
 - Creation de la structure du journal des versions.
+## [v0.12.0] - 2026-10-20
+### Ajoute
+- Tests d'integration Eloquent (SQLite en memoire) : CRUD, relations, chevauchements, annulation.
+- Tableau de bord (`DashboardController`) avec statistiques.
+- Conteneurisation Docker (`Dockerfile`, `docker-compose.yml` avec MySQL 8.0).
+- Page d'erreur 405.
+
+### Corrige
+- Mise a jour des vues et du style CSS.
+
+## [1.0.0] - 2026-10-20
+Version finale — branche `release/1.0.0`.
+
+### Ajoute
+- Systeme de messages flash (succes / erreur) via `App\Support\Flash` affiches dans le layout.
+- Styles CSS des messages flash (`.flash--success`, `.flash--error`).
+- Gestion globale des exceptions dans `Application::runSafe()` : page 500 dediee, message generique a l'utilisateur, detail en log.
+- Page d'erreur 500 (`templates/error/500.php`).
+- Diagramme de classes (`docs/diagramme-classes.md` + PlantUML).
+- Verification de l'installation depuis un depot fraichement clone.
+
+### Corrige
+- Tests unitaires `ValidationTest` alignes sur l'API actuelle des validateurs (`ValidationResult::errors()`, champ `email`, champ `batiment`).
+- Flash de confirmation ajoute apres creation de salle, mise a jour de salle, creation et annulation de reservation.

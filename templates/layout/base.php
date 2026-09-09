@@ -32,6 +32,24 @@ $navigation = [
 </header>
 
 <main id="main-content" class="page-main page-container">
+    <?php
+    $flash = new \App\Support\Flash();
+    $flashMessages = $flash->pull();
+    ?>
+    <?php if (!empty($flashMessages['success'])): ?>
+        <div class="flash flash--success" role="status">
+            <?php foreach ($flashMessages['success'] as $message): ?>
+                <p class="flash__item"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+    <?php if (!empty($flashMessages['error'])): ?>
+        <div class="flash flash--error" role="alert">
+            <?php foreach ($flashMessages['error'] as $message): ?>
+                <p class="flash__item"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
     <?= $content ?? '' ?>
 </main>
 </body>
