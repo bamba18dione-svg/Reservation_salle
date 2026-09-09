@@ -47,10 +47,11 @@ La configuration chargee depuis `.env` est centralisee dans `config/database.php
 
 La base de donnees et les tables seront ajoutees dans les prochaines etapes.
 
-Pour creer les tables apres avoir configure `.env`, executez :
+Pour creer les tables apres avoir configure `.env`, executez les migrations dans l'ordre :
 
 ```bash
-php database/migrations/001_create_salles_and_reservations.php
+php database/migrations/001_create_salles_table.php
+php database/migrations/002_create_reservations_table.php
 ```
 
 ## Etape 1 : initialisation Composer
