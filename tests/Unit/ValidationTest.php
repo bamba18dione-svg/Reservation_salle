@@ -77,7 +77,7 @@ class ValidationTest extends TestCase
     {
         $donnees = [
             'email' => 'test@example.com',
-            'date_debut' => '2026-13-45 25:99:00', // Format / Valeur invalide
+            'date_debut' => '2026-13-45 25:99:00',
             'date_fin' => '2026-10-10 12:00:00',
         ];
 

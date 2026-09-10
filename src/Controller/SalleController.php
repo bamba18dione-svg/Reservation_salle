@@ -82,7 +82,7 @@ final class SalleController
 
         if ($salle === null) {
             return $this->notFound();
-        }
+        } 
 
         $input['active'] = (bool) ($input['active'] ?? false);
         if (isset($input['capacite'])) {
