@@ -1151,3 +1151,43 @@ textarea.form-control {
 .flash__item {
     margin: 0;
 }
+
+
+/* ===== Authentification ===== */
+.site-header__auth {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.site-header__user {
+    font-weight: 600;
+    color: #1e7e46;
+}
+
+.inline-form {
+    display: inline;
+    margin: 0;
+}
+
+.btn--link {
+    background: none;
+    border: none;
+    color: #2a6fdb;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.auth-hint {
+    margin-top: 24px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.auth-hint code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+}

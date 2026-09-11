@@ -47,7 +47,7 @@ final class Router
             $arguments[] = (int) $input['salle'];
         }
 
-        if ($method === 'POST' && in_array($action, ['store', 'update'], true)) {
+        if ($method === 'POST' && in_array($action, ['store', 'update', 'login'], true)) {
             $arguments[] = $input;
         }
 

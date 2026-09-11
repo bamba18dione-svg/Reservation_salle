@@ -36,11 +36,19 @@ final class SalleController
 
     public function create(): string
     {
+        if ($redirect = $this->requireAuth()) {
+            return $redirect;
+        }
+
         return $this->views->render('salle/form', ['salle' => null, 'errors' => [], 'old' => []]);
     }
 
     public function store(array $input): string
     {
+        if ($redirect = $this->requireAuth()) {
+            return $redirect;
+        }
+
         $input['active'] = (bool) ($input['active'] ?? false);
         if (isset($input['capacite'])) {
             $input['capacite'] = (int) $input['capacite'];
@@ -82,7 +90,7 @@ final class SalleController
 
         if ($salle === null) {
             return $this->notFound();
-        } 
+        }
 
         $input['active'] = (bool) ($input['active'] ?? false);
         if (isset($input['capacite'])) {
@@ -100,6 +108,21 @@ final class SalleController
         (new Flash())->success('Salle mise à jour avec succès.');
 
         return $this->redirect('/salles/' . $id);
+    }
+
+    /**
+     * Gardien d'authentification : un visiteur anonyme est redirige vers /login.
+     */
+    private function requireAuth(): ?string
+    {
+        if ((new AuthService())->check()) {
+            return null;
+        }
+
+        (new Flash())->error('Veuillez vous connecter pour effectuer cette action.');
+        header('Location: /login', true, 303);
+
+        return '';
     }
 
     private function notFound(): string

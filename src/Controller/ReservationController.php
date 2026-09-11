@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Auth\AuthService;
 use App\DTO\CreerReservationDTOBuilder;
 use App\Exception\ReservationInvalideException;
 use App\Exception\SalleIndisponibleException;
@@ -47,11 +48,19 @@ final class ReservationController
 
     public function create(): string
     {
+        if ($redirect = $this->requireAuth()) {
+            return $redirect;
+        }
+
         return $this->views->render('reservation/form', ['salles' => $this->salles->all(), 'errors' => [], 'old' => []]);
     }
 
     public function store(array $input): string
     {
+        if ($redirect = $this->requireAuth()) {
+            return $redirect;
+        }
+
         if (isset($input['salle_id'])) {
             $input['salle_id'] = (int) $input['salle_id'];
         }
@@ -87,6 +96,10 @@ final class ReservationController
 
     public function cancel(int $id): string
     {
+        if ($redirect = $this->requireAuth()) {
+            return $redirect;
+        }
+
         try {
             $this->canceller->execute($id);
         } catch (\DomainException) {
@@ -98,6 +111,21 @@ final class ReservationController
         (new Flash())->success('Réservation annulée avec succès.');
 
         return $this->redirect('/reservations');
+    }
+
+    /**
+     * Gardien d'authentification : un visiteur anonyme est redirige vers /login.
+     */
+    private function requireAuth(): ?string
+    {
+        if ((new AuthService())->check()) {
+            return null;
+        }
+
+        (new Flash())->error('Veuillez vous connecter pour effectuer cette action.');
+        header('Location: /login', true, 303);
+
+        return '';
     }
 
     private function notFound(): string

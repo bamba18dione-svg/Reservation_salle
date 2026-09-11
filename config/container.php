@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Auth\AuthService;
+use App\Controller\AuthController;
 use App\Controller\ReservationController;
 use App\Controller\SalleController;
 use App\Http\Router;
@@ -35,6 +37,8 @@ return [
 	  );
 	}),
 	SalleController::class => autowire(),
+AuthController::class => autowire(),
+AuthService::class => autowire(),
 	ReservationController::class => autowire(),
 	CreerReservationService::class => autowire(),
 	AnnulerReservationService::class => autowire(),

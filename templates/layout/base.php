@@ -5,6 +5,7 @@ $navigation = [
     'salles' => ['label' => 'Salles', 'href' => '/salles'],
     'reservations' => ['label' => 'Réservations', 'href' => '/reservations'],
 ];
+$currentUser = (new \App\Auth\AuthService())->user();
 ?>
 <!doctype html>
 <html lang="fr">
@@ -27,6 +28,16 @@ $navigation = [
                 <a class="site-nav__link <?= $activeNav === $key ? 'is-active' : '' ?>" href="<?= $item['href'] ?>" <?= $activeNav === $key ? 'aria-current="page"' : '' ?>><?= $item['label'] ?></a>
             <?php endforeach; ?>
         </nav>
+        <div class="site-header__auth">
+            <?php if ($currentUser !== null): ?>
+                <span class="site-header__user"><?= htmlspecialchars($currentUser['nom'], ENT_QUOTES, 'UTF-8') ?></span>
+                <form method="post" action="/logout" class="inline-form">
+                    <button type="submit" class="btn btn--link">Deconnexion</button>
+                </form>
+            <?php else: ?>
+                <a class="btn btn--link" href="/login">Connexion</a>
+            <?php endif; ?>
+        </div>
     </div>
 </header>
 
