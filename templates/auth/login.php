@@ -47,4 +47,4 @@ $hasError = static fn (string $field): bool => !empty($errors[$field]);
     <button type="submit" class="btn btn--primary">Se connecter</button>
 </form>
 
-<p class="auth-hint">Compte de demonstration : <code>admin@example.com</code> / <code>password123</code></p>
+<p class="auth-hint">Connectez-vous avec le compte fourni par l'administrateur.</p>
