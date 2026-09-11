@@ -7,7 +7,7 @@ services:
     container_name: reservation_app
     restart: unless-stopped
     ports:
-      - "8001:8000"
+      - "80:80:80"
     volumes:
       - .:/var/www/html
     env_file:

@@ -410,3 +410,15 @@ L'application est accessible sur http://localhost:8000.
 ./vendor/bin/phpunit
 ```
 Les tests unitaires couvrent la validation et les services ; les tests d'integration utilisent SQLite en memoire pour tester les modeles Eloquent et les repositories sans MySQL.
+
+## Sauvegarde de la base de donnees
+Les donnees vivent dans le volume Docker `db_data`. Pour ne jamais les perdre :
+
+```bash
+./database/backup.sh save      # sauvegarde -> database/backups/<date>.sql.gz
+./database/backup.sh list      # liste des sauvegardes
+./database/backup.sh restore   # restaure la derniere sauvegarde
+```
+
+Recommandation : lancer `save` apres chaque session de travail importante.
+A eviter : `docker compose down -v`, `docker rm` du conteneur db sans sauvegarde prealable.
