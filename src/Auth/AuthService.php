@@ -17,10 +17,7 @@ final class AuthService
         }
     }
 
-    /**
-     * Tente une connexion. Retourne l'utilisateur si le couple
-     * email/mot de passe est correct, sinon null.
-     */
+   
     public function attempt(string $email, string $password): ?User
     {
         $user = User::where('email', mb_strtolower(trim($email)))->first();

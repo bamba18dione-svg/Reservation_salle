@@ -3,9 +3,6 @@
 declare(strict_types=1);
 
 use App\Auth\AuthService;
-use App\Controller\AuthController;
-use App\Controller\ReservationController;
-use App\Controller\SalleController;
 use App\Http\Router;
 use App\Repository\EloquentReservationRepository;
 use App\Repository\EloquentSalleRepository;
@@ -36,10 +33,6 @@ return [
 	    dirname(__DIR__) . '/routes/web.php'
 	  );
 	}),
-	SalleController::class => autowire(),
-AuthController::class => autowire(),
-AuthService::class => autowire(),
-	ReservationController::class => autowire(),
 	CreerReservationService::class => autowire(),
 	AnnulerReservationService::class => autowire(),
 	SalleValidator::class => autowire(),

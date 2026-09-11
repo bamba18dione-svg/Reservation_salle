@@ -52,7 +52,7 @@ $ajoutees = 0;
 $existantes = 0;
 
 foreach ($sallesInitiales as $data) {
-    // Condition d'unicité : nom + batiment
+    
     $salle = Salle::firstOrCreate(
         [
             'nom' => $data['nom'],

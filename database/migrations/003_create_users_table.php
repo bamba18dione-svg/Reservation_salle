@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Migration 003 : création de la table `users` (authentification des responsables).
- *
- * Responsabilité unique : décrire et créer la table des comptes utilisateurs.
- * Idempotent : ne fait rien si la table existe déjà.
- */
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Blueprint;
@@ -32,8 +26,7 @@ if (!$schema->hasTable('users')) {
         $table->timestamps();
     });
 
-    // Compte de démonstration : admin@example.com / password123
-    // (le mot de passe est haché, jamais stocké en clair)
+   
     if (Capsule::table('users')->count() === 0) {
         Capsule::table('users')->insert([
             'nom' => 'Administrateur',
