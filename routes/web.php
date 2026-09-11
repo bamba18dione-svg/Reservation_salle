@@ -12,7 +12,7 @@ return static function (RouteCollector $routes): void {
 $routes->addRoute('GET', '/login', [AuthController::class, 'showLogin']);
 $routes->addRoute('POST', '/login', [AuthController::class, 'login']);
 $routes->addRoute('POST', '/logout', [AuthController::class, 'logout']);
-$routes->addRoute('GET', '/', [SalleController::class, 'index']);
+$routes->addRoute('GET', '/', [AuthController::class, 'showLogin']);
 	$routes->addRoute('GET', '/salles', [SalleController::class, 'index']);
 	$routes->addRoute('GET', '/salles/create', [SalleController::class, 'create']);
 	$routes->addRoute('POST', '/salles', [SalleController::class, 'store']);

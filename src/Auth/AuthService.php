@@ -6,16 +6,6 @@ namespace App\Auth;
 
 use App\Model\User;
 
-/**
- * Service d'authentification des responsables.
- *
- * Responsabilite unique : verifier les identifiants et maintenir
- * l'identite de l'utilisateur connecte dans la session.
- *
- * - Les mots de passe ne sont jamais stockes ni compares en clair :
- *   `password_hash()` a l'inscription, `password_verify()` a la connexion.
- * - L'identite est stockee en session PHP, jamais dans un cookie "maison".
- */
 final class AuthService
 {
     private const SESSION_USER_KEY = 'auth_user';

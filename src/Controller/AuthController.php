@@ -8,9 +8,7 @@ use App\Auth\AuthService;
 use App\Support\Flash;
 use App\View\ViewRenderer;
 
-/**
- * Controleur d'authentification : connexion et deconnexion.
- */
+
 final class AuthController
 {
     public function __construct(
@@ -21,7 +19,7 @@ final class AuthController
 
     public function showLogin(): string
     {
-        // Deja connecte : redirection (303) vers la liste des salles.
+       
         if ($this->auth->check()) {
             return $this->redirect('/salles');
         }
@@ -49,8 +47,7 @@ final class AuthController
         $user = $this->auth->attempt($email, $password);
 
         if ($user === null) {
-            // Message volontairement generique : on ne dit pas si c'est
-            // l'e-mail ou le mot de passe qui est incorrect.
+           
             return $this->views->render('auth/login', [
                 'errors' => ['email' => ['Identifiants incorrects.']],
                 'old' => ['email' => $email],
