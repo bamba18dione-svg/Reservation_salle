@@ -2,29 +2,30 @@
 
 declare(strict_types=1);
 
-
-use Illuminate\Database\Capsule\Manager as Capsule;
+use App\Migration\MigrationInterface;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Builder;
 
-$projectRoot = dirname(__DIR__, 2);
-require $projectRoot . '/vendor/autoload.php';
+return new class implements MigrationInterface {
+    public function up(Builder $schema): void
+    {
+        if ($schema->hasTable('salles')) {
+            return;
+        }
 
-$capsule = require $projectRoot . '/config/database.php';
+        $schema->create('salles', function (Blueprint $table) {
+            $table->id();
+            $table->string('nom', 100);
+            $table->string('batiment', 100);
+            $table->unsignedInteger('capacite');
+            $table->string('type', 30);
+            $table->boolean('active')->default(true);
+            $table->timestamps();
+        });
+    }
 
-if (!$capsule instanceof Capsule) {
-    throw new RuntimeException('La configuration de la base doit retourner Capsule\\Manager.');
-}
-
-$schema = $capsule->schema();
-
-if (!$schema->hasTable('salles')) {
-    $schema->create('salles', static function (Blueprint $table): void {
-        $table->id();
-        $table->string('nom', 100);
-        $table->string('batiment', 100);
-        $table->unsignedInteger('capacite');
-        $table->string('type', 30);
-        $table->boolean('active')->default(true);
-        $table->timestamps();
-    });
-}
+    public function down(Builder $schema): void
+    {
+        $schema->dropIfExists('salles');
+    }
+};

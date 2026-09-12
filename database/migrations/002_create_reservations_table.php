@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-
-
-use Illuminate\Database\Capsule\Manager as Capsule;
+use App\Migration\MigrationInterface;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Builder;
 
-$projectRoot = dirname(__DIR__, 2);
-require $projectRoot . '/vendor/autoload.php';
+return new class implements MigrationInterface {
+    public function up(Builder $schema): void
+    {
+        if ($schema->hasTable('reservations')) {
+            return;
+        }
 
-$capsule = require $projectRoot . '/config/database.php';
+        $schema->create('reservations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('salle_id')->constrained('salles')->restrictOnDelete();
+            $table->string('responsable', 120);
+            $table->string('email', 255);
+            $table->string('motif', 255);
+            $table->dateTime('date_debut');
+            $table->dateTime('date_fin');
+            $table->string('statut', 20)->default('confirmee');
+            $table->timestamps();
+        });
+    }
 
-if (!$capsule instanceof Capsule) {
-    throw new RuntimeException('La configuration de la base doit retourner Capsule\\Manager.');
-}
-
-$schema = $capsule->schema();
-
-if (!$schema->hasTable('reservations')) {
-    $schema->create('reservations', static function (Blueprint $table): void {
-        $table->id();
-        $table->foreignId('salle_id')->constrained('salles')->restrictOnDelete();
-        $table->string('responsable', 120);
-        $table->string('email', 255);
-        $table->string('motif', 255);
-        $table->dateTime('date_debut');
-        $table->dateTime('date_fin');
-        $table->string('statut', 20)->default('confirmee');
-        $table->timestamps();
-    });
-}
+    public function down(Builder $schema): void
+    {
+        $schema->dropIfExists('reservations');
+    }
+};
