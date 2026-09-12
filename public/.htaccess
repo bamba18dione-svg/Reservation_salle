@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Ne pas interférer avec les fichiers et dossiers existants
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Rediriger tout le reste vers index.php
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>

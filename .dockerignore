@@ -1,0 +1,29 @@
+# Dependencies
+/vendor/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Tests and CI
+/tests/
+/.phpunit.result.cache
+/phpunit.xml
+
+# Git
+.git/
+.gitignore
+
+# Runtime
+*.log
+/cache/
+/tmp/
+/database/backups/
