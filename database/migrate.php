@@ -2,15 +2,7 @@
 
 declare(strict_types=1);
 
-/**
- * Exécuteur de migrations autonomes (sans framework).
- * Charge chaque migration depuis database/migrations/ et appelle up() ou down().
- *
- * Utilisation :
- *   php database/migrate.php            -> applique toutes les migrations
- *   php database/migrate.php refresh    -> down() puis up() de chaque migration
- *   php database/migrate.php rollback   -> down() de la dernière migration
- */
+
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/config/database.php';
