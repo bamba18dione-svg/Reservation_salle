@@ -25,6 +25,10 @@ try {
         'charset'   => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
         'prefix'    => '',
+        'options'   => [
+            PDO::MYSQL_ATTR_SSL_CA => '/etc/secrets/ca.pem',
+            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => true,
+        ],
     ]);
 
     // Rendre l'instance de Capsule disponible globalement via des méthodes statiques
